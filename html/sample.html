@@ -1,14 +1,23 @@
 <html>
 <head>
-    <script src="../js/arc.js"></script>
+    <script src="../js/gauge.js"></script>
 </head>
 <body>
-<canvas id='surface'></canvas>
+<canvas id='surface' width="200" height="200"></canvas>
 <script>
     var s = document.getElementById('surface');
     var s_ctx = s.getContext("2d");
-    var arc = new Arc(s_ctx);
-    arc.makeArc();
+    var arc = new Gauge(s_ctx, s, 0, 100);
+
+    var t = 0;
+    function tick()
+    {
+        arc.reset();
+        arc.makeFillMeterArc(t++%100);
+    }
+
+    setInterval(tick, 100);
+
 
 </script>
 </body>

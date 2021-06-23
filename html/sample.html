@@ -2,18 +2,28 @@
 <head>
     <script src="../js/gauge.js"></script>
 </head>
-<body>
-<canvas id='surface' width="200" height="200"></canvas>
+<body style="position:relative;">
+    <div style="position:absolute;left:0px;">
+        <canvas id='surface' width="200" height="150"></canvas>
+    </div>
+    <div style="position:absolute;left:200px;">
+        <canvas id='surface2' width="200" height="150"></canvas>
+    </div>
 <script>
     var s = document.getElementById('surface');
     var s_ctx = s.getContext("2d");
-    var arc = new Gauge(s_ctx, s, 0, 100);
+    var s2 = document.getElementById('surface2');
+    var s2_ctx = s2.getContext("2d");
+    var arc = new Gauge(s_ctx, s, 0, 100, "neon", "green", "GPU Temp");
+    var arc2 = new Gauge(s2_ctx, s2, 0, 100, "neon", "blue", "CPU Temp");
 
     var t = 0;
     function tick()
     {
         arc.reset();
         arc.makeFillMeterArc(t++%100);
+        arc2.reset();
+        arc2.makeFillMeterArc(t++%100);
     }
 
     setInterval(tick, 100);

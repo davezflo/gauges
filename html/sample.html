@@ -9,13 +9,21 @@
     <div style="position:absolute;left:200px;">
         <canvas id='surface2' width="200" height="150"></canvas>
     </div>
+    <div style="position:absolute;left:400px;">
+        <canvas id='surface3' width="200" height="150"></canvas>
+    </div>
 <script>
     var s = document.getElementById('surface');
     var s_ctx = s.getContext("2d");
+    var arc = new Gauge(s_ctx, s, 0, 100, "neon", "yellow", "GPU Temp");
+
     var s2 = document.getElementById('surface2');
     var s2_ctx = s2.getContext("2d");
-    var arc = new Gauge(s_ctx, s, 0, 100, "neon", "green", "GPU Temp");
-    var arc2 = new Gauge(s2_ctx, s2, 0, 100, "neon", "blue", "CPU Temp");
+    var arc2 = new Gauge(s2_ctx, s2, 0, 100, "pencil", "yellow", "CPU Temp");
+    
+    var s3 = document.getElementById('surface3');
+    var s3_ctx = s3.getContext("2d");
+    var arc3 = new Gauge(s3_ctx, s3, 0, 100, "flat", "yellow", "CPU Temp");
 
     var t = 0;
     function tick()
@@ -24,6 +32,9 @@
         arc.makeFillMeterArc(t++%100);
         arc2.reset();
         arc2.makeFillMeterArc(t++%100);
+
+        arc3.reset();
+        arc3.makeFillMeterArc(t++%100);
     }
 
     setInterval(tick, 100);

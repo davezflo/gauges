@@ -14,32 +14,32 @@ var styles =
             "themes": {
                 "blue": {
                     "color": "blue",
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "red": {
                     "color": "red",
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "green": {
                     "color": "green",
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "purple": {
                     "color": "purple",
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "orange": {
                     "color": "orange",
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "yellow": {
                     "color": "yellow",
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
             }
@@ -49,37 +49,37 @@ var styles =
                 "blue": {
                     "color": "blue",
                     "linewidth": 2,
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "red": {
                     "color": "red",
                     "linewidth": 2,
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "green": {
                     "color": "green",
                     "linewidth": 2,
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "purple": {
                     "color": "purple",
                     "linewidth": 2,
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "orange": {
                     "color": "orange",
                     "linewidth": 2,
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "yellow": {
                     "color": "yellow",
                     "linewidth": 2,
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
             }
@@ -90,42 +90,42 @@ var styles =
                     "color": "rgba(0,0,255,0.2)",
                     "blur": 50,
                     "blurcolor": "blue",
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "red": {
                     "color": "rgb(255,0,0,0.2)",
                     "blur": 50,
                     "blurcolor": "red",
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica",
                 },
                 "green": {
                     "color": "rgb(0,255,0,0.2)",
                     "blur": 50,
                     "blurcolor": "green",
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "yellow": {
                     "color": "rgb(255,255,0,0.2)",
                     "blur": 50,
                     "blurcolor": "yellow",
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "orange": {
                     "color": "rgb(255,165,0,0.2)",
                     "blur": 50,
                     "blurcolor": "orange",
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
                 "purple": {
                     "color": "rgb(128,0,128,0.2)",
                     "blur": 50,
                     "blurcolor": "purple",
-                    "fontsize": "30",
+                    "fontsize": ".25",
                     "fontname": "Helvetica"
                 },
             }
@@ -143,12 +143,13 @@ class Gauge
         this.style = style;
         this.theme = theme;
         this.label = label;
+        this.fontsize = parseFloat(styles[this.style]["themes"][this.theme]["fontsize"]) * this.element.width;
         this.reset();
     }
 
     reset()
     {
-        this.ctx.fillStyle = "black";
+        this.ctx.fillStyle = "rgba(0,0,0,.1)";
         this.ctx.fillRect(0,0, this.element.width, this.element.height);
     }
 
@@ -159,16 +160,16 @@ class Gauge
 
     _neonText(center, text, offY, fontadjust)
     {
-        this.ctx.font = "bold " + (styles[this.style]["themes"][this.theme]["fontsize"]*fontadjust).toString()+"px "+styles[this.style]["themes"][this.theme]["fontname"];
+        this.ctx.font = "bold " + (this.fontsize*fontadjust).toString()+"px "+styles[this.style]["themes"][this.theme]["fontname"];
         this.ctx.fillStyle = styles[this.style]["themes"][this.theme]["blurcolor"];
 
-        var adjust = styles[this.style]["themes"][this.theme]["fontsize"]*fontadjust;
-        adjust = adjust/3*2 * (text.length)/2;
+        var adjust = this.fontsize*fontadjust;
+        adjust = adjust/2 * (text.length)/2;
 
         this.ctx.fillStyle = styles[this.style]["themes"][this.theme]["blurcolor"];
         this.ctx.fillText(text, center.x-adjust, center.y+offY);
     
-        this.ctx.font = (styles[this.style]["themes"][this.theme]["fontsize"]*fontadjust).toString()+"px "+styles[this.style]["themes"][this.theme]["fontname"];
+        this.ctx.font = (this.fontsize*fontadjust).toString()+"px "+styles[this.style]["themes"][this.theme]["fontname"];
         this.ctx.fillStyle = "rgb(255,255,255,0.8)";
         this.ctx.shadowBlur = styles[this.style]["themes"][this.theme]["blur"]*.1;
         this.ctx.shadowColor = styles[this.style]["themes"][this.theme]["blurcolor"];
@@ -198,22 +199,22 @@ class Gauge
             this.ctx.strokeStyle = "rgb(255,255,255,0.2)"; //white, but 20% opaque
             this.ctx.lineWidth = (outside-inside)*(.9-i/10); //decimate line thickness (gets brighter the closer to center)
             this.ctx.arc(center.x, center.y, inside+(outside-inside)/2, Math.PI, percentRads);
-            this.ctx.shadowBlur = styles[this.style]["themes"][this.theme]["blur"]/5;
+            this.ctx.shadowBlur = styles[this.style]["themes"][this.theme]["blur"]/brightness;
             this.ctx.shadowColor = "white";
             this.ctx.stroke();
         }
 
         this._neonText(center, value.toString(), 0, 1);
-        this._neonText(center, this.label, parseInt(styles[this.style]["themes"][this.theme]["fontsize"]), .5);
+        this._neonText(center, this.label, this.fontsize*.8, .5);
 
     }
 
     _flatText(center, text, offY, fontadjust)
     {
-        var adjust = styles[this.style]["themes"][this.theme]["fontsize"]*fontadjust;
-        adjust = adjust/3*2 * (text.length)/2;
+        var adjust = this.fontsize*fontadjust;
+        adjust = adjust/2 * (text.length)/2;
         this.ctx.fillStyle = styles[this.style]["themes"][this.theme]["color"];
-        this.ctx.font = "bold " + (styles[this.style]["themes"][this.theme]["fontsize"]*fontadjust).toString()+"px "+styles[this.style]["themes"][this.theme]["fontname"];
+        this.ctx.font = "bold " + (this.fontsize*fontadjust).toString()+"px "+styles[this.style]["themes"][this.theme]["fontname"];
         this.ctx.fillStyle = styles[this.style]["themes"][this.theme][2];
         this.ctx.fillText(text, center.x-adjust, center.y+offY);
     }
@@ -228,14 +229,14 @@ class Gauge
         this.ctx.stroke();
 
         this._flatText(center, value.toString(), 0, 1);
-        this._flatText(center, this.label, parseInt(styles[this.style]["themes"][this.theme]["fontsize"]), .5);
+        this._flatText(center, this.label, this.fontsize*.8, .5);
     }
 
     _pencilText(center, text, offY, fontadjust)
     {
-        var adjust = styles[this.style]["themes"][this.theme]["fontsize"]*fontadjust;
-        adjust = adjust/3*2 * (text.length)/2;
-        this.ctx.font = "bold " + (styles[this.style]["themes"][this.theme]["fontsize"]*fontadjust).toString()+"px "+styles[this.style]["themes"][this.theme]["fontname"];
+        var adjust = this.fontsize*fontadjust;
+        adjust = adjust/2 * (text.length)/2;
+        this.ctx.font = (this.fontsize*fontadjust).toString()+"px "+styles[this.style]["themes"][this.theme]["fontname"];
         this.ctx.strokeStyle = styles[this.style]["themes"][this.theme][2];
         this.ctx.strokeText(text, center.x-adjust, center.y+offY);
     }
@@ -261,14 +262,14 @@ class Gauge
         }
 
         this._pencilText(center, value.toString(), 0, 1);
-        this._pencilText(center, this.label, parseInt(styles[this.style]["themes"][this.theme]["fontsize"]), .5);
+        this._pencilText(center, this.label, this.fontsize*.8, .5);
     }
 
     makeFillMeterArc(value)
     {
         this.ctx.shadowBlur = 0;
         this.ctx.lineWidth = 1;
-        this.ctx.strokeStyle = "white";
+        this.ctx.strokeStyle = styles[this.style]["themes"][this.theme]["color"];
         var percent = value/(this.max-this.min);
         var outside = this.element.width/2.5;
         var inside = this.element.width/4;
